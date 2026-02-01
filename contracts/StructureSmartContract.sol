@@ -7,7 +7,7 @@ pragma solidity 0.8.30;
 
 // Contract
 
-contract StructureContract {
+contract Structure {
 
 // Numbers
 
@@ -31,7 +31,7 @@ bool test1 = false;
 
 // Array
 
-uint256[5] arraytest = [1, 2, 3, 4, 5]
+uint256[5] arraytest = [1, 2, 3, 4, 5];
 
 
 // Mapping
