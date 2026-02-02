@@ -1,86 +1,191 @@
-# Solidity Calculator Contract
+# Smart Contracts & QA Documentation (Basic Level)
 
-## Description
+## Overview
 
-This `Calculator` contract is designed as an educational example to practice good Solidity practices. It combines basic technical skills like:
+This repository contains the technical and QA documentation for two Solidity smart contracts:
 
-- State management
+- `Calculator.sol`
+- `Structure.sol`
+
+The project is designed as a **foundational learning and documentation exercise**, focused on understanding Solidity contract structure, execution flow, state management, and manual QA analysis on the EVM.
+
+**Audit / QA Role:** QA Engineer (Blockchain / EVM)  
+**Audit Type:** Manual Review + Functional QA Analysis  
+**Solidity Version:** `0.8.30`  
+**License:** `LGPL-3.0-only`  
+**Status:** QA Documentation – Basic Level  
+**Date:** 31/01/2026  
+
+---
+
+## Objectives
+
+The primary goal of this repository is **progressive understanding**, not production readiness.
+
+Key validation objectives:
+
+- Correct Solidity contract structure
+- Proper use of data types (`uint`, `int`, `bool`, `string`, arrays, mappings)
+- Expected functional behavior
+- Correct event emission
+- State persistence and transaction atomicity
+- Understanding of visibility (`public`, `internal`)
+- Clear, traceable, and auditable QA documentation
+
+This repository is intended as the **first step in a series of increasingly complex smart contract projects**.
+
+---
+
+## Scope
+
+### Included
+
+- SPDX license declaration
+- Fixed Solidity pragma
+- State variables
+- Basic and advanced data types
 - Modifiers
 - Events
-- Function visibility
-- Internal logic separation
+- Public and internal functions
+- State persistence
+- Transaction atomicity
+- Manual QA test cases and reasoning
 
-The main focus is readability, structure, and solid fundamentals.
+### Explicitly Excluded (By Design)
 
-# Calculator Contract Documentation
+The following topics are **out of scope intentionally**, not by omission:
 
-## Variables
+- Advanced gas optimization
+- Access control (roles, ownership)
+- Pausability
+- Upgradeability (proxy patterns)
+- Advanced attack vectors (reentrancy, MEV, frontrunning)
+- Automated testing frameworks
 
-- `resultado`: public value of type `uint256` initialized to 10.
+---
 
-## Modifiers
+## Methodology
 
-- `checkNumber(uint256 num1_)`: checks that `num1_` is 10, otherwise the transaction reverts.
+The analysis and documentation follow a **manual QA-oriented approach**:
 
-## Events
+- Line-by-line contract review
+- Execution flow analysis
+- Validation of pre-state and post-state
+- Scenario simulation:
+  - Valid scenarios
+  - Invalid scenarios
+  - Edge cases
+- Validation against Solidity `>= 0.8.x` best practices
+- Focus on functional correctness over optimization
 
-- `Addition(uint256 number1, uint256 number2, uint256 resultado)`: emitted when two numbers are added.  
-- `Substraction(uint256 number1, uint256 number2, uint256 resultado)`: emitted when two numbers are subtracted
+---
 
-## External Functions
+## Contracts
 
-- `addition(uint256 num1_, uint256 num2_)`: adds two numbers and emits an `Addition` event.  
-- `substraction(uint256 num1_, uint256 num2_)`: subtracts two numbers using internal logic and emits a `Substraction` event.  
-- `substraction2(int256 num1_, int256 num2_)`: subtracts two integer numbers using internal logic, pure function.  
-- `multiplier(uint256 num1_)`: multiplies the `resultado` variable by `num1_`.  
-- `multiplier2(uint256 num1_)`: multiplies `resultado` by `num1_` only if `num1_` is 10 (checked by `checkNumber`).  
+### 1. Calculator.sol
 
-## Internal Functions
+#### Architectural Analysis
 
-- `subtraction_logic(uint256 num1_, uint256 num2_)`: internal logic to subtract `uint256` numbers.  
-- `subtraction_logic2(int256 num1_, int256 num2_)`: internal logic to subtract `int256` numbers.  
+**License**
+- SPDX license defined and valid
+- Standards-compliant  
+- Risk level: Low
 
-# Testing
+**Solidity Version**
+- Fixed version: `pragma solidity 0.8.30`
+- Native overflow and underflow protections
+- Risk level: Low
 
-The smart contract has been thoroughly tested based on the defined test cases. The test suite ensures correct behavior across normal scenarios, edge cases, and failure conditions.
+---
 
-## Test Coverage
+#### State Variables
 
-### Initial State Validation
-- Verifies that the `resultado` variable is correctly initialized to **10** upon contract deployment.
+**`result`**
+- Type: `uint256`
+- Stored in contract storage
+- Explicitly initialized to `10`
+- Automatic public getter
 
-### Addition Function
-- Normal positive values (e.g., `5 + 5 = 10`)
-- Including zero (e.g., `0 + 7 = 7`)
-- Upper boundary (`MAX_UINT256 + 0`)
-- Overflow scenario (`MAX_UINT256 + 1`, expected to revert)
 
-### Subtraction Function
-- Valid subtraction (e.g., `10 - 3 = 7`)
-- Subtraction resulting in zero (`5 - 5 = 0`)
-- Underflow scenario (`3 - 5`, expected to revert)
+---
 
-### Subtraction2 Function (Signed Integers)
-- Operations with negative values (e.g., `-10 - 3 = -13`)
-- Lower boundary (`MIN_INT256 - 0`)
+#### Modifiers
 
-### Multiplier Function
-- Normal multiplication (e.g., multiplying by 2 updates state to `20`)
-- Multiplication by zero (result equals `0`)
+**`checkNumber(uint256)`**
+- Restricts execution to an exact value (`10`)
+- Uses `revert` for invalid conditions
+- Applies pre-execution control logic
 
-### Multiplier2 Function with Modifier
-- Allowed value (`10`), passes the modifier and performs multiplication
-- Disallowed value (`9`), transaction reverts due to modifier restriction
 
-## Testing Techniques
+---
 
-The test cases are designed using:
-- **Equivalence Partitioning (EP)**
-- **Boundary Value Analysis (BVA)**
+#### Events
 
-Each test validates:
-- Correct numerical results
-- Proper event emission
-- Expected revert behavior and error handling
+- Defined and correctly emitted
+- Used for execution observability
+- Status: Compliant
 
-This approach ensures robust and reliable coverage of both functional logic and edge conditions.
+---
+
+#### Function Analysis
+
+**`addition(uint256, uint256)`**
+- Pure deterministic calculation
+- Does not modify contract state
+- Emits an event
+
+**`subtraction(uint256, uint256)`**
+- Uses an internal function
+- Protected against underflow by Solidity 0.8.x
+
+**`subtraction2(uint256, uint256)`**
+- Demonstrates use of signed integers
+
+**`multiply(uint256)`**
+- Modifies persistent state (`result`)
+- No range validation applied
+- Used to demonstrate state mutation
+
+---
+
+### 2. Structure.sol
+
+The `Structure.sol` contract complements `Calculator.sol` by focusing on:
+
+- Solidity syntax
+- Variable initialization behavior
+- Data type boundaries
+- Arrays and structural layout
+- Execution order and storage behavior
+
+(See contract-level comments and QA notes for detailed analysis.)
+
+---
+
+## QA Perspective
+
+This repository emphasizes **thinking like a QA engineer**, not just writing Solidity code.
+
+Key takeaways:
+
+- Understanding how and why contracts fail
+- Designing test cases from execution flow
+- Observing state transitions
+- Distinguishing expected vs unexpected behavior
+- Documenting behavior in a traceable way
+
+---
+
+## Intended Audience
+
+- Junior blockchain developers
+- QA engineers transitioning into Web3
+- Solidity learners seeking structured examples
+- Reviewers evaluating foundational smart contract knowledge
+
+---
+
+## License
+
+This project is licensed under the **LGPL-3.0-only** license.  
+See the `LICENSE` file for details.
